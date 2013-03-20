@@ -12,9 +12,8 @@ class SimplePagerAdapter extends FragmentPagerAdapter {
 
     public SimplePagerAdapter(FragmentManager fm) {
         super(fm);
+        fragments.add(new MapPage());
         fragments.add(new SignalRecorderPage());
-        fragments.add(new Fragment());
-        //fragments.add(new Fragment());
     }
 
     @Override
