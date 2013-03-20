@@ -32,7 +32,7 @@ public class SignalRecorderPage extends Fragment implements Observer {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.signal_recorder, container);
+        View view = inflater.inflate(R.layout.signal_recorder, container, false);
         btn = (Button) view.findViewById(R.id.btn);
         resultsLog = (LinearLayout) view.findViewById(R.id.results);
         return view;
