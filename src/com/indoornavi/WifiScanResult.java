@@ -1,4 +1,4 @@
-package com.luxoft;
+package com.indoornavi;
 
 import android.net.wifi.ScanResult;
 

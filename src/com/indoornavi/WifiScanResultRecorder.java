@@ -1,4 +1,4 @@
-package com.luxoft;
+package com.indoornavi;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;

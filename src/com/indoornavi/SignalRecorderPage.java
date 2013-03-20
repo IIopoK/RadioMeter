@@ -1,11 +1,12 @@
+package com.indoornavi;
 
-package com.luxoft;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,27 +15,38 @@ import android.widget.Toast;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainActivity extends Activity implements Observer {
-    public static final String TAG = "WiFiSampler";
+public class SignalRecorderPage extends Fragment implements Observer {
+    public static final String TAG = "SignalRecorderPage";
     private volatile boolean isStarted = false;
     private Button btn;
     private TextView currentMessage;
+    private LinearLayout resultsLog;
 
     private WifiScanner wifiScanner;
     private WifiScanResultRecorder recorder;
 
-    private LinearLayout resultsLog;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        btn = (Button) findViewById(R.id.btn);
-        resultsLog = (LinearLayout) findViewById(R.id.results);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.signal_recorder, container);
+        btn = (Button) view.findViewById(R.id.btn);
+        resultsLog = (LinearLayout) view.findViewById(R.id.results);
+        return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putString(KEY_CONTENT, mContent);
     }
 
     @Override
     public void onStop() {
+        Log.d(TAG, "onStop()");
         super.onStop();
         wifiScanner.stop();
     }
@@ -53,13 +65,13 @@ public class MainActivity extends Activity implements Observer {
         wifiScanner.stop();
         String externalStorageState = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(externalStorageState)) {
-           try{
-            recorder.dumpSamples();
-           } catch (Exception e) {
-               Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-           }
+            try {
+                recorder.dumpSamples();
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         } else {
-            Toast.makeText(this, "External SD card not mounted. Storage state: " + externalStorageState, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "External SD card not mounted. Storage state: " + externalStorageState, Toast.LENGTH_LONG).show();
         }
 
         btn.setText("Start");
@@ -67,12 +79,12 @@ public class MainActivity extends Activity implements Observer {
 
     private void startSampling() {
         isStarted = true;
-        recorder = new WifiScanResultRecorder(this);
-        wifiScanner = new WifiScanner(this);
+        recorder = new WifiScanResultRecorder(getActivity());
+        wifiScanner = new WifiScanner(getActivity());
         wifiScanner.addObserver(this);
         wifiScanner.addObserver(recorder);
 
-        currentMessage = new TextView(MainActivity.this);
+        currentMessage = new TextView(getActivity());
         currentMessage.setText("preparing..");
         resultsLog.addView(currentMessage);
 

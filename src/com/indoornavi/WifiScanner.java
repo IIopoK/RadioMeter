@@ -1,4 +1,4 @@
-package com.luxoft;
+package com.indoornavi;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,7 +42,7 @@ public class WifiScanner extends Observable {
         @Override
         public void onReceive(Context context, Intent intent) {
             List<ScanResult> results = wifi.getScanResults();
-            Log.d(MainActivity.TAG, "Received data from " + results.size() + " access points. Notify " + countObservers() + " observers");
+            Log.d(WifiScanner.TAG, "Received data from " + results.size() + " access points. Notify " + countObservers() + " observers");
             setChanged();
             notifyObservers(new WifiScanResult(samplesCnt++, results));
             scan();
