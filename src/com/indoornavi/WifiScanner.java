@@ -18,13 +18,13 @@ public class WifiScanner extends Observable {
     private int samplesCnt;
     private long lastScanTime;
 
-    private final long scanPeriod = 2 * 1000; //milliseconds
+    private final long scanPeriod = 5 * 1000; //milliseconds
 
     public WifiScanner(Context context) {
         this.context = context;
         wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         context.registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        Log.d(TAG, "Starting scan.. wifi was " + (wifi.isWifiEnabled() ? "enabled" : "disabled"));
+        Log.d(App.TAG, "Starting scan.. wifi was " + (wifi.isWifiEnabled() ? "enabled" : "disabled"));
         wifi.setWifiEnabled(true);
         scan();
     }
@@ -42,7 +42,7 @@ public class WifiScanner extends Observable {
         @Override
         public void onReceive(Context context, Intent intent) {
             List<ScanResult> results = wifi.getScanResults();
-            Log.d(WifiScanner.TAG, "Received data from " + results.size() + " access points. Notify " + countObservers() + " observers");
+            Log.d(App.TAG, "Received data from " + results.size() + " access points. Notify " + countObservers() + " observers");
             setChanged();
             notifyObservers(new WifiScanResult(samplesCnt++, results));
             scan();
@@ -53,6 +53,7 @@ public class WifiScanner extends Observable {
         long sleepTime = scanPeriod - (System.currentTimeMillis() - lastScanTime);
         if (sleepTime > 0) {
             try {
+                Log.e(TAG, "Going to sleep for " + sleepTime);
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 Log.e(TAG, "scan sleep interrupted", e);

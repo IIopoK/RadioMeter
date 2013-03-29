@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.util.Observable;
 import java.util.Observer;
 
-public class SignalRecorderPage extends Fragment implements Observer {
+public class SignalRecorderPage extends Fragment implements Observer, View.OnClickListener {
     public static final String TAG = "SignalRecorderPage";
     private volatile boolean isStarted = false;
     private Button btn;
@@ -33,7 +33,8 @@ public class SignalRecorderPage extends Fragment implements Observer {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.signal_recorder, container, false);
-        btn = (Button) view.findViewById(R.id.btn);
+        btn = (Button) view.findViewById(R.id.recorderStartStopBtn);
+        btn.setOnClickListener(this);
         resultsLog = (LinearLayout) view.findViewById(R.id.results);
         return view;
     }
@@ -46,21 +47,13 @@ public class SignalRecorderPage extends Fragment implements Observer {
 
     @Override
     public void onStop() {
-        Log.d(TAG, "onStop()");
+        Log.d(App.TAG, "onStop()");
         super.onStop();
         wifiScanner.stop();
     }
 
-    public void btnPressed(View view) {
-        if (isStarted) {
-            stopSampling();
-        } else {
-            startSampling();
-        }
-    }
-
     private void stopSampling() {
-        Log.d(TAG, "stop sampling..");
+        Log.d(App.TAG, "stop sampling..");
         isStarted = false;
         wifiScanner.stop();
         String externalStorageState = Environment.getExternalStorageState();
@@ -95,5 +88,20 @@ public class SignalRecorderPage extends Fragment implements Observer {
     public void update(Observable observable, Object o) {
         WifiScanResult res = (WifiScanResult) o;
         currentMessage.setText("collected " + res.num + " scan results");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.recorderStartStopBtn:
+            {
+                if (isStarted) {
+                    stopSampling();
+                } else {
+                    startSampling();
+                }
+                break;
+            }
+        }
     }
 }

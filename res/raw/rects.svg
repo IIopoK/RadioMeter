@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<svg width="640" height="480" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+    <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+    <g>
+        <title>Layer 1</title>
+        <rect stroke-width="5" stroke="#000000" fill="none" id="rect_1" height="120" width="142" y="205" x="115"/>
+        <rect stroke-width="5" stroke="#7fff00" fill="none" id="rect_2" height="111" width="126" y="215" x="273"/>
+        <rect stroke-width="5" stroke="#000000" fill="none" id="rect_3" height="103" width="153" y="91" x="104"/>
+        <rect stroke-width="5" stroke="#000000" fill="none" id="rect_4" height="140" width="173" y="99" x="268"/>
+        <rect stroke-width="5" stroke="#000000" fill="none" id="rect_5" height="0" width="17" y="290" x="396"/>
+    </g>
+</svg>

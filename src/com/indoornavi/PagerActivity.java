@@ -12,7 +12,7 @@ public class PagerActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("PagerActivity", "onCreate()");
+        Log.d(App.TAG, "PagerActivity.onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page);
 
@@ -56,5 +56,18 @@ public class PagerActivity extends FragmentActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }*/
+
+    //http://stackoverflow.com/questions/8122460/viewpager-intercepts-all-x-axis-ontouch-events-how-to-disable
+    /*public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                pager.requestDisallowInterceptTouchEvent(true);
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                pager.requestDisallowInterceptTouchEvent(false);
+                break;
+        }
     }*/
 }
