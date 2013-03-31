@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".PositioningService" android:exported="false"/>
+        <service android:name=".service.PositioningService" android:exported="false"/>
 
     </application>
 </manifest> 
