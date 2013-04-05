@@ -102,7 +102,7 @@
    - test clipping?  (SVG Basic feature, could be moved to SVG Acid 2 with opacity, gradients, etc)
    - error handling of path data? http://www.w3.org/TR/SVG11/implnote.html#PathElementImplementationNotes
    - error handling for invalid color value (#red for instance) http://www.w3.org/TR/SVG11/implnote.html#ErrorProcessing
-       - Safari has a bug on this that I'd like to highlight (fill="#red" results in a red fill)
+       - Safari has a bug on this that I'd like to highlight (fill="#red" data in a red fill)
    
 
 QUESTIONS:

@@ -1,6 +1,8 @@
 package com.indoornavi;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.util.Log;
@@ -10,12 +12,17 @@ import android.view.View;
 import android.widget.ImageView;
 import com.almeros.android.multitouch.gesturedetectors.MoveGestureDetector;
 import com.almeros.android.multitouch.gesturedetectors.RotateGestureDetector;
+import com.caverock.androidsvg.SVG;
+
+import java.util.Set;
 
 public class MapView extends ImageView implements View.OnTouchListener {
     private static final String TAG = "MapView";
 
+    private SVG svg;
+
     private Matrix matrix = new Matrix();
-    private float scaleFactor = .4f;
+    private float scaleFactor = 1.0f;
     private float rotationDegree = 0.f;
     private float mFocusX = 0.f;
     private float mFocusY = 0.f;
@@ -38,9 +45,23 @@ public class MapView extends ImageView implements View.OnTouchListener {
         moveDetector = new MoveGestureDetector(context, new MoveListener());
     }
 
+
+
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Log.d(TAG, "onTouch : " + event);
+        //http://stackoverflow.com/questions/8122460/viewpager-intercepts-all-x-axis-ontouch-events-how-to-disable
+        //process all gestures solely
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                v.getParent().requestDisallowInterceptTouchEvent(false);
+                break;
+        }
+
         scaleDetector.onTouchEvent(event);
         rotateDetector.onTouchEvent(event);
         moveDetector.onTouchEvent(event);
@@ -57,16 +78,47 @@ public class MapView extends ImageView implements View.OnTouchListener {
         return true; // indicate event was handled
     }
 
+    public void setSvg(SVG svg) {
+        this.svg = svg;
+        float dpi = getResources().getDisplayMetrics().xdpi;
+        float documentWidth = svg.getDocumentWidth(dpi);
+        float documentHeight = svg.getDocumentHeight(dpi);
+        Log.d(TAG, "Svg size: " + documentWidth + "x" + documentHeight);
+
+        //TODO: dynamic resolution depending on scale
+        int bmWidth = (int)(Math.ceil(documentWidth));
+        int bmHeight = (int)(Math.ceil(documentHeight));
+        Log.d(TAG, "Bitmap size: " + bmWidth + "x" + bmHeight);
+        Bitmap bm = Bitmap.createBitmap(bmWidth, bmHeight, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bm);
+        canvas.drawRGB(255, 255, 255);
+        Log.d(TAG, "Canvas size: " + canvas.getWidth() + "x" + canvas.getHeight());
+
+        Set<String> viewList = svg.getViewList();
+        Log.d(TAG, "Svg views: " + viewList);
+
+        //svg.renderToCanvas(canvas, null, dpi, SVG.AspectRatioAlignment.xMidYMid, SVG.AspectRatioScale.MEET);
+        svg.renderToCanvas(canvas, null, dpi, SVG.AspectRatioAlignment.none, SVG.AspectRatioScale.MEET);
+        setImageBitmap(bm);
+    }
+
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-            Log.d(TAG, "SCALE: " + detector);
+            //Log.d(TAG, "SCALE: " + detector);
             scaleFactor *= detector.getScaleFactor(); // scale change since previous event
 
             // Don't let the object get too small or too large.
             scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 10.0f));
 
             return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            super.onScaleEnd(detector);
+            Log.d(TAG, "SCALE END: sf=" + scaleFactor);
         }
     }
 

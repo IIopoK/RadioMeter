@@ -35,22 +35,22 @@ public class WifiScanResultRecorder implements Observer {
         addSample(res);
     }
 
-    private boolean filterScanResult(ScanResult sr) {
-        return !TextUtils.isEmpty(sr.SSID) && myWAPs.contains(sr.SSID);
+    private boolean filterScanResult(WifiScanResult.APData sr) {
+        return !TextUtils.isEmpty(sr.networkId) && myWAPs.contains(sr.networkId);
     }
 
     private void addSample(WifiScanResult scanResults) {
         Set<String> missedWapSet = new HashSet<String>(samples.keySet());
-        for (ScanResult sr : scanResults.results) {
+        for (WifiScanResult.APData sr : scanResults.data) {
             if (filterScanResult(sr)) {
                 //String wapName = String.format("%s[%s]; freq: %s; capabilities: %s", sr.SSID, sr.BSSID, sr.frequency, sr.capabilities);
-                String wapName = String.format("%s %sMHz", sr.SSID, sr.frequency);
+                String wapName = String.format("%s %sMHz", sr.networkId, sr.frequency);
                 List<String> levels = samples.get(wapName);
                 if (levels == null) {
                     levels = new ArrayList<String>();
                     samples.put(wapName, levels);
                 }
-                levels.add(String.valueOf(sr.level));
+                levels.add(String.valueOf(sr.signalStrength));
                 missedWapSet.remove(wapName);
             }
         }
@@ -101,7 +101,7 @@ public class WifiScanResultRecorder implements Observer {
 
             samples = new TreeMap<String, List<String>>();
         } catch (Exception e) {
-            Log.e(TAG, "Can't save results", e);
+            Log.e(TAG, "Can't save data", e);
             throw new RuntimeException(e);
         }
     }

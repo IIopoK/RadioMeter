@@ -16,13 +16,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class SignalRecorderPage extends Fragment implements Observer, View.OnClickListener {
-    public static final String TAG = "SignalRecorderPage";
+    public static final String TAG = App.TAG + " SignalRecorderPage";
     private volatile boolean isStarted = false;
     private Button btn;
     private TextView currentMessage;
     private LinearLayout resultsLog;
 
-    private WifiScanner wifiScanner;
+    //private WifiScannerImpl wifiScanner;
     private WifiScanResultRecorder recorder;
 
     @Override
@@ -49,13 +49,13 @@ public class SignalRecorderPage extends Fragment implements Observer, View.OnCli
     public void onStop() {
         Log.d(App.TAG, "onStop()");
         super.onStop();
-        wifiScanner.stop();
+        //wifiScanner.stopScan();
     }
 
     private void stopSampling() {
         Log.d(App.TAG, "stop sampling..");
         isStarted = false;
-        wifiScanner.stop();
+        //wifiScanner.stopScan();
         String externalStorageState = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(externalStorageState)) {
             try {
@@ -73,9 +73,9 @@ public class SignalRecorderPage extends Fragment implements Observer, View.OnCli
     private void startSampling() {
         isStarted = true;
         recorder = new WifiScanResultRecorder(getActivity());
-        wifiScanner = new WifiScanner(getActivity());
-        wifiScanner.addObserver(this);
-        wifiScanner.addObserver(recorder);
+//        wifiScanner = new WifiScannerImpl(getActivity());
+//        wifiScanner.addObserver(this);
+//        wifiScanner.addObserver(recorder);
 
         currentMessage = new TextView(getActivity());
         currentMessage.setText("preparing..");
@@ -87,14 +87,13 @@ public class SignalRecorderPage extends Fragment implements Observer, View.OnCli
     @Override
     public void update(Observable observable, Object o) {
         WifiScanResult res = (WifiScanResult) o;
-        currentMessage.setText("collected " + res.num + " scan results");
+        currentMessage.setText("collected " + res.num + " scan data");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.recorderStartStopBtn:
-            {
+            case R.id.recorderStartStopBtn: {
                 if (isStarted) {
                     stopSampling();
                 } else {

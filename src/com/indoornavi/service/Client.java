@@ -7,8 +7,11 @@ import android.content.ServiceConnection;
 import android.os.*;
 import android.util.Log;
 import com.indoornavi.App;
+import com.indoornavi.WifiScanResult;
 
-public class Client {
+import java.util.Observable;
+
+public class Client extends Observable {
     private static final String TAG = App.TAG + " Client";
 
     /**
@@ -28,13 +31,32 @@ public class Client {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case ClientMessage.GOT_WIFI_RSSI:
-                    //TODO:
+                case ConversationConst.MSG_GOT_WIFI_RSSI:
+                    onWifiScanReady(msg);
+                    break;
+                case ConversationConst.MSG_POSITION_CHANGED:
+                    onPositionChanged(msg);
                     break;
                 default:
                     super.handleMessage(msg);
             }
         }
+    }
+
+    private void onWifiScanReady(Message msg) {
+        Bundle data = msg.getData();
+        data.setClassLoader(App.appContext.getClassLoader());
+        WifiScanResult scanResult = (WifiScanResult) data.getParcelable(ConversationConst.MSG_PARAM_WIFI_RSSI);
+        Log.d(TAG, "Received data from " + scanResult.data.size() + " access points. Notifying " + countObservers() + " observers");
+        setChanged();
+        notifyObservers(scanResult);
+    }
+
+    private void onPositionChanged(Message msg) {
+        int position = msg.arg1;
+        Log.d(TAG, "Received position " + position + ". Notifying " + countObservers() + " observers");
+        setChanged();
+        notifyObservers(position);
     }
 
     /**
@@ -47,10 +69,9 @@ public class Client {
 
             try {
                 Log.d(TAG, "requesting for register client");
-                Message msg = Message.obtain(null, ServiceMessage.REGISTER_CLIENT);
+                Message msg = Message.obtain(null, ConversationConst.MSG_REGISTER_CLIENT);
                 msg.replyTo = clientMessenger;
                 Client.this.service.send(msg);
-
             } catch (RemoteException e) {
                 Log.d(TAG, "Exception", e);
                 // In this case the service has crashed before we could even
@@ -66,7 +87,7 @@ public class Client {
         }
     };
 
-    void bindService(Context context) {
+    public void bindService(Context context) {
         Log.d(TAG, "binding client service");
         // Establish a connection with the service.  We use an explicit
         // class name because there is no reason to be able to let other
@@ -75,11 +96,11 @@ public class Client {
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    void unbindService(Context context) {
+    public void unbindService(Context context) {
         Log.d(TAG, "unbinding client service");
         if (service != null) {
             try {
-                Message msg = Message.obtain(null, ServiceMessage.UNREGISTER_CLIENT);
+                Message msg = Message.obtain(null, ConversationConst.MSG_UNREGISTER_CLIENT);
                 msg.replyTo = clientMessenger;
                 service.send(msg);
             } catch (RemoteException e) {

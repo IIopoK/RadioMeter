@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 class SimplePagerAdapter extends FragmentPagerAdapter {
+
     private final List<Fragment> fragments = new ArrayList<Fragment>();
+    private final List<String> fragmentsNames = new ArrayList<String>();
 
     public SimplePagerAdapter(FragmentManager fm) {
         super(fm);
         fragments.add(new MapPage());
-        fragments.add(new SignalRecorderPage());
+        fragmentsNames.add("Map");
+
+        fragments.add(new RSSIChartPage());
+        fragmentsNames.add("RSSI Chart");
     }
 
     @Override
@@ -28,6 +33,6 @@ class SimplePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Page " + position;
+        return fragmentsNames.get(position);
     }
 }
