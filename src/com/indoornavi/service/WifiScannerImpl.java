@@ -1,13 +1,19 @@
-package com.indoornavi;
+package com.indoornavi.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import com.indoornavi.App;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class WifiScannerImpl implements WifiScanner {
     private static final int MSG_RESCAN = 0;
@@ -51,7 +57,8 @@ public class WifiScannerImpl implements WifiScanner {
     private final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            listener.onScanComplete(WifiScanResult.fromScanResult(wifi.getScanResults(), samplesCnt++));
+            List<ScanResult> scanResults = filter(wifi.getScanResults());
+            listener.onScanComplete(WifiScanResult.fromScanResult(scanResults, samplesCnt++));
             long delayRequired = scanPeriod - (System.currentTimeMillis() - scanStartedTime);
             scanHandler.sendEmptyMessageDelayed(MSG_RESCAN, delayRequired);
         }
@@ -61,5 +68,21 @@ public class WifiScannerImpl implements WifiScanner {
     public void startScan() {
         wifi.startScan();
         scanStartedTime = System.currentTimeMillis();
+    }
+
+
+    private List<ScanResult> filter(List<ScanResult> results) {
+        String[] prefix = new String[] {"TP-LINK_710", "TP-LINK_712", "TP-LINK_706" };
+        ArrayList<ScanResult> filtered = new ArrayList<ScanResult>();
+        for (ScanResult result : results) {
+            if (result.frequency >= -90) {
+                for (String p : prefix) {
+                    if(result.SSID.startsWith(p)) {
+                        filtered.add(result);
+                    }
+                }
+            }
+        }
+        return filtered;
     }
 }

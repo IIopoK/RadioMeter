@@ -3,11 +3,13 @@ package com.indoornavi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class SimplePagerAdapter extends FragmentPagerAdapter {
+//http://stackoverflow.com/questions/8748064/starting-activity-from-fragment-causes-nullpointerexception
+class SimplePagerAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> fragments = new ArrayList<Fragment>();
     private final List<String> fragmentsNames = new ArrayList<String>();

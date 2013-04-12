@@ -32,7 +32,7 @@ public class MapPage extends Fragment implements Observer {
 
         try {
             mapRes.put(0, SVG.getFromResource(getActivity(), R.raw.lux2_4));
-            mapRes.put(1, SVG.getFromResource(getActivity(), R.raw.lux2_4_1));
+         /*   mapRes.put(1, SVG.getFromResource(getActivity(), R.raw.lux2_4_1));
             mapRes.put(2, SVG.getFromResource(getActivity(), R.raw.lux2_4_2));
             mapRes.put(3, SVG.getFromResource(getActivity(), R.raw.lux2_4_3));
             mapRes.put(4, SVG.getFromResource(getActivity(), R.raw.lux2_4_4));
@@ -43,7 +43,7 @@ public class MapPage extends Fragment implements Observer {
             mapRes.put(0, SVG.getFromResource(getActivity(), R.raw.lux2_4));
             mapRes.put(1, SVG.getFromResource(getActivity(), R.raw.lux2_4_1));
             mapRes.put(2, SVG.getFromResource(getActivity(), R.raw.lux2_4_3));
-            mapRes.put(3, SVG.getFromResource(getActivity(), R.raw.lux2_4_5));
+            mapRes.put(3, SVG.getFromResource(getActivity(), R.raw.lux2_4_5));*/
 
         } catch (SVGParseException e) {
             Log.d(TAG, "rendSvg exception", e);

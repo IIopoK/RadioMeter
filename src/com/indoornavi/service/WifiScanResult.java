@@ -1,11 +1,10 @@
-package com.indoornavi;
+package com.indoornavi.service;
 
 import android.net.wifi.ScanResult;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class WifiScanResult implements Parcelable {

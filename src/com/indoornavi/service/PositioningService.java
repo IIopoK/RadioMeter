@@ -43,14 +43,14 @@ public class PositioningService extends Service {
             }
         };
 
-        //wifiScanner = new WifiScannerImpl(getApplicationContext(), 2 * 1000, wifiScanReady);
-        wifiScanner = new WiFiScannerMock(wifiScanReady);
+        wifiScanner = new WifiScannerImpl(getApplicationContext(), 2 * 1000, wifiScanReady);
+        //wifiScanner = new WifiScannerMock(wifiScanReady);
 
         positioning = new Positioning(new Positioning.Listener() {
             @Override
             public void onPositionChanged(String positionName) {
                 String num = positionName.substring(1);
-                sendClients(ConversationConst.MSG_POSITION_CHANGED, Integer.parseInt(num) +1);
+                //sendClients(ConversationConst.MSG_POSITION_CHANGED, Integer.parseInt(num) +1);
             }
         });
 

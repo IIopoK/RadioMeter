@@ -2,10 +2,10 @@ package com.indoornavi;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
-import android.net.wifi.ScanResult;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import com.indoornavi.service.WifiScanResult;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -18,25 +18,21 @@ public class WifiScanResultRecorder implements Observer {
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
     private Date startDate = new Date();
     private final Context context;
-    private Set<String> myWAPs;
 
     public WifiScanResultRecorder(Context context) {
         this.context = context;
-        myWAPs = new HashSet<String>();
-        myWAPs.add("TP-LINK_706F86");
-        myWAPs.add("TP-LINK_706BD6");
-        myWAPs.add("TP-LINK_706BD9");
-        myWAPs.add("TP-LINK_704FFE");
     }
 
     @Override
     public void update(Observable observable, Object o) {
-        WifiScanResult res = (WifiScanResult) o;
-        addSample(res);
+        if(o instanceof  WifiScanResult) {
+            WifiScanResult res = (WifiScanResult) o;
+            addSample(res);
+        }
     }
 
     private boolean filterScanResult(WifiScanResult.APData sr) {
-        return !TextUtils.isEmpty(sr.networkId) && myWAPs.contains(sr.networkId);
+        return true;
     }
 
     private void addSample(WifiScanResult scanResults) {

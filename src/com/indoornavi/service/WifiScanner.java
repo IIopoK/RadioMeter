@@ -1,4 +1,4 @@
-package com.indoornavi;
+package com.indoornavi.service;
 
 public interface WifiScanner {
     void stopScan();

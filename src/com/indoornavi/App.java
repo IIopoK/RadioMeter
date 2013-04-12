@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import com.indoornavi.service.Client;
 import com.indoornavi.service.PositioningService;
 
@@ -33,4 +35,22 @@ public class App {
         }
         return false;
     }
+
+    public static final View.OnTouchListener pagerDisallowInterceptListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            //http://stackoverflow.com/questions/8122460/viewpager-intercepts-all-x-axis-ontouch-events-how-to-disable
+            //process all gestures solely
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    break;
+            }
+            return false;
+        }
+    };
 }

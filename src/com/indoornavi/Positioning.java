@@ -1,6 +1,6 @@
 package com.indoornavi;
 
-import android.util.Log;
+import com.indoornavi.service.WifiScanResult;
 
 import java.util.*;
 

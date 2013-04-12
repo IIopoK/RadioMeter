@@ -17,7 +17,7 @@ import com.caverock.androidsvg.SVG;
 import java.util.Set;
 
 public class MapView extends ImageView implements View.OnTouchListener {
-    private static final String TAG = "MapView";
+    private static final String TAG = App.TAG + " MapView";
 
     private SVG svg;
 
@@ -46,21 +46,9 @@ public class MapView extends ImageView implements View.OnTouchListener {
     }
 
 
-
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        //http://stackoverflow.com/questions/8122460/viewpager-intercepts-all-x-axis-ontouch-events-how-to-disable
-        //process all gestures solely
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                v.getParent().requestDisallowInterceptTouchEvent(false);
-                break;
-        }
+        App.pagerDisallowInterceptListener.onTouch(v, event);
 
         scaleDetector.onTouchEvent(event);
         rotateDetector.onTouchEvent(event);

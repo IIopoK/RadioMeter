@@ -1,13 +1,11 @@
 package com.indoornavi.service;
 
 import android.os.Handler;
-import com.indoornavi.WifiScanResult;
-import com.indoornavi.WifiScanner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WiFiScannerMock implements WifiScanner {
+public class WifiScannerMock implements WifiScanner {
     String[] scans = new String[]{
             "-70 -46 -71",
             "-70 -42 -73",
@@ -42,31 +40,25 @@ public class WiFiScannerMock implements WifiScanner {
             "-39 -74 -64" };
 
     private final Listener listener;
-    private final List<WifiScanResult> wifiScanResults = new ArrayList<WifiScanResult>();
     private Handler handler;
     private Runnable scan;
 
-    public WiFiScannerMock(Listener listener) {
+    public WifiScannerMock(Listener listener) {
         this.listener = listener;
         this.handler = new Handler();
         scan = new Runnable() {
             @Override
             public void run() {
-                int step = cnt++ % wifiScanResults.size();
-                WiFiScannerMock.this.listener.onScanComplete(wifiScanResults.get(step));
+                int step = cnt++ % scans.length;
+                String[] apLevels = scans[step].split(" ");
+                List<WifiScanResult.APData> data = new ArrayList<WifiScanResult.APData>();
+                for (int i = 0; i < apLevels.length; i++) {
+                    data.add(new WifiScanResult.APData("n" + i, "d" + i, Integer.parseInt(apLevels[i]), 0));
+                }
+                WifiScannerMock.this.listener.onScanComplete(new WifiScanResult(cnt++, data));
                 handler.postDelayed(this, 300);
             }
         };
-
-        int scanNum = 0;
-        for (String scan : scans) {
-            String[] apLevels = scan.split(" ");
-            List<WifiScanResult.APData> data = new ArrayList<WifiScanResult.APData>();
-            for (int i = 0; i < apLevels.length; i++) {
-                data.add(new WifiScanResult.APData("n" + i, "d" + i, Integer.parseInt(apLevels[i]), 0));
-            }
-            wifiScanResults.add(new WifiScanResult(scanNum++, data));
-        }
     }
 
     @Override

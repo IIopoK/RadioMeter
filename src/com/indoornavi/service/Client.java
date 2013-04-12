@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.*;
 import android.util.Log;
 import com.indoornavi.App;
-import com.indoornavi.WifiScanResult;
 
 import java.util.Observable;
 
