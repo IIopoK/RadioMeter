@@ -1,4 +1,4 @@
 RadioMeter
 ==========
 
-For now it just record WiFi RSSI from specified access points.
+Simple app for view and record RSSI from WIFI access points.
